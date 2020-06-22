@@ -1,0 +1,40 @@
+# Maintainer: Horimoto Yasuhiro <horimoto@clear-code.com>
+
+_realname=luarocks
+pkgbase=mingw-w64-luajit-${_realname}
+pkgname=("${MINGW_PACKAGE_PREFIX}-luajit-${_realname}")
+pkgver=3.3.1
+pkgrel=0
+pkgdesc="the package manager on LuaJIT for Lua modules (mingw-w64)"
+arch=('any')
+url="https://luarocks.org"
+license=("MIT")
+install=luarocks-${CARCH}.install
+depends=("${MINGW_PACKAGE_PREFIX}-luajit")
+conflicts=("${MINGW_PACKAGE_PREFIX}-lua51-luarocks")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
+             "unzip")
+options=('staticlibs' 'strip')
+source=("https://luarocks.org/releases/${_realname}-${pkgver}.tar.gz")
+sha256sums=('eb20cd9814df05535d9aae98da532217c590fc07d48d90ca237e2a7cdcf284fe')
+
+# prepare() {
+#   cd "${srcdir}/${_realname}-${pkgver}"
+#   patch -p1 -i ${srcdir}/mingw32-msys2.patch
+# }
+
+build() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+
+  ../${_realname}-${pkgver}/configure \
+    --prefix=${MINGW_PREFIX} \
+    --with-lua-include=${MINGW_PREFIX}/include/luajit-2.0 \
+    --lua-suffix=jit.exe
+
+  make build
+}
+
+package() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+}
