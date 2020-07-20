@@ -1,0 +1,60 @@
+# Maintainer: Horimoto Yasuhiro <horimoto@clear-code.com>
+
+_realname=luajit
+pkgbase=mingw-w64-${_realname}-git
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
+pkgver=2.1.0.570e758
+pkgrel=1
+_sourcedir=${_realname}
+pkgdesc="Just-in-time compiler and drop-in replacement for Lua 5.1 (mingw-w64)"
+arch=('any')
+url="https://luajit.org/"
+license=('MIT')
+depends=('winpty')
+conflicts=("${MINGW_PACKAGE_PREFIX}-lua51"
+           "${MINGW_PACKAGE_PREFIX}-luajit")
+provides=("${MINGW_PACKAGE_PREFIX}-lua51"
+          "${MINGW_PACKAGE_PREFIX}-luajit")
+replaces=("${MINGW_PACKAGE_PREFIX}-lua51"
+          "${MINGW_PACKAGE_PREFIX}-luajit")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" "git")
+options=('strip' 'staticlibs')
+source=("${_realname}"::"git+https://luajit.org/git/luajit-2.0.git#branch=v2.1"
+        001-fix-pkg-config-file.patch)
+sha256sums=('SKIP'
+            '4df486e82b0bbeead01dcf6001e90c51477a3a8ac18611d60d7067f2c7013428')
+
+pkgver() {
+  cd "${srcdir}/${_realname}"
+  git describe --long | sed 's/^v//;s/-/./g'
+}
+
+prepare() {
+  cd "${srcdir}/${_sourcedir}"
+  patch -p1 -i ${srcdir}/001-fix-pkg-config-file.patch
+  sed -i "s|export PREFIX= /usr/local|export PREFIX="${MINGW_PREFIX}"|g" ${srcdir}/${_sourcedir}/Makefile
+}
+
+build() {
+  cd "${srcdir}/${_sourcedir}"
+
+  msg "Build static version"
+  make amalg BUILDMODE=static
+
+  msg "Build dynamic version"
+  make
+}
+
+package() {
+  cd "${srcdir}/${_sourcedir}"
+  make DESTDIR=${pkgdir} install
+
+  echo "#!/usr/bin/env bash" > "${pkgdir}${MINGW_PREFIX}/bin/${_realname}"
+  echo '/usr/bin/winpty "$( dirname ${BASH_SOURCE[0]} )/'${_realname}'.exe" "$@"' >> "${pkgdir}${MINGW_PREFIX}/bin/${_realname}"
+
+  install -v -Dm644 "${srcdir}/${_sourcedir}/src/lua51.dll" "${pkgdir}${MINGW_PREFIX}/bin/lua51.dll" || exit 1
+  install -v -Dm644 "${srcdir}/${_sourcedir}/src/luajit.exe" "${pkgdir}${MINGW_PREFIX}/bin/luajit.exe" || exit 1
+  install -v -Dm644 "${srcdir}/${_sourcedir}/src/libluajit-5.1.dll.a" "${pkgdir}${MINGW_PREFIX}/lib/libluajit-5.1.dll.a" || exit 1
+
+  cp ${pkgdir}${MINGW_PREFIX}/lib/pkgconfig/lua{jit,5.1}.pc
+}
