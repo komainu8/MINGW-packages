@@ -14,9 +14,7 @@ jobs:
         include: [
           { msystem: MINGW64, toolchain: mingw-w64-x86_64-toolchain, can-fail: false },
           { msystem: MINGW32, toolchain: mingw-w64-i686-toolchain, can-fail: false },
-          { msystem: UCRT64, toolchain: mingw-w64-ucrt-x86_64-toolchain, can-fail: false },
-          { msystem: CLANG64, toolchain: mingw-w64-clang-x86_64-toolchain, can-fail: true },
-          { msystem: CLANG32, toolchain: '', can-fail: true }
+          { msystem: UCRT64, toolchain: mingw-w64-ucrt-x86_64-toolchain, can-fail: false }
         ]
     name: ${{ matrix.msystem }}
     steps:
