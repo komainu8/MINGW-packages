@@ -3,7 +3,7 @@
 _realname=groonga
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=11.0.2
+pkgver=11.0.3
 pkgrel=1
 pkgdesc="An opensource fulltext search engine (mingw-w64)"
 arch=('any')
@@ -27,7 +27,7 @@ depends=("${MINGW_PACKAGE_PREFIX}-arrow"
          "${MINGW_PACKAGE_PREFIX}-zlib"
          "${MINGW_PACKAGE_PREFIX}-zstd")
 makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
-sha256sums=('de29cb5648e3c29873d343747d626a5efcb302357dc7bd82dc4df776e2de558c'
+sha256sums=('a1895ce8f4812e8bcdb0458373a786a4323ce53e9b4c7801bf103f3d93f76905'
             'SKIP')
 validpgpkeys=('2701F317CFCCCB975CADE9C2624CF77434839225') # Groonga Key <packages@groonga.org>
 
