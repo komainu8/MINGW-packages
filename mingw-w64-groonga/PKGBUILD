@@ -47,6 +47,7 @@ build() {
     --without-libevent \
     --disable-benchmark \
     --disable-groonga-httpd \
+    --with-ruby \
     --enable-mruby \
     --enable-shared-onigmo
 
