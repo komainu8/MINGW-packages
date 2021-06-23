@@ -42,13 +42,13 @@ build() {
     --target=${MINGW_CHOST} \
     --disable-libedit \
     --with-mecab \
-    --with-onigmo=system \
     --without-kytea \
     --without-cutter \
     --without-libevent \
     --disable-benchmark \
     --disable-groonga-httpd \
-    --enable-mruby
+    --enable-mruby \
+    --enable-shared-onigmo
 
   make
 }
