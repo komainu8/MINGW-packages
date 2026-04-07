@@ -69,6 +69,7 @@ build() {
       -DGRN_WITH_APACHE_ARROW=ON \
       -DGRN_WITH_BLOSC=auto \
       -DGRN_WITH_MRUBY=ON \
+      -DCMAKE_CXX_FLAGS_RELEASE="-O2" \
       ../${_realname}-${pkgver}
 
   ${MINGW_PREFIX}/bin/cmake --build .
